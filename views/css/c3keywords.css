@@ -1,0 +1,18 @@
+/* C3Keywords module */
+div.c3keywords_block .block_content { padding: 3px 6px 0 }
+div.c3keywords_block p {
+	text-align: justify;
+	font-size: 0.9em
+}
+div.c3keywords_block p a {
+	margin: 0 0.1em;
+	line-height: 1.5em;
+	padding:2px;
+	font-size: 1.4em;
+}
+div.c3keywords_block p a:hover {
+	background-color: #ccc;
+	text-decoration: none;
+	padding:2px;
+	color:#333333;
+}
