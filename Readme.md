@@ -8,4 +8,3 @@ Created for prestashop v1.6
 ## Installation
 Install as a normal module and export (Export->export common keywords) in the C3 application.
 
-test unstable of doom
