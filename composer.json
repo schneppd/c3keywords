@@ -1,12 +1,12 @@
 {
   "name": "Schnepp David/c3keywords",
-  "description": "Adds C3's tag list in front-categories.",
-  "homepage": "https://github.com/equilibrium-d/personal.dev.c3-keywords",
+  "description": "Adds C3's list of most common product tags per category in front-end.",
+  "homepage": "https://github.com/schneppd/c3keywords",
   "license": "GNU GENERAL PUBLIC LICENSE v 3.0 (GPL 3.0)",
   "authors": [
     {
       "name": "Schnepp David",
-      "email": "s.dav.dev@gmail.com"
+      "email": "business@schneppd.com"
     }
   ],
   "require": {
