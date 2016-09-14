@@ -156,7 +156,7 @@ class C3Keywords extends Module {
 		//if correct sending
 		if (Tools::isSubmit('submit'.$this->name)) {
 			//check if module's cache dir exists
-			$isCacheExist = NsC3Keywords\C3ModuleController::createModuleCacheDir($this->name);
+			$isCacheExist = $this->controller->isModuleCacheCreated();
 			if (!$isCacheExist)
 				$errors[] = $this->l('There is an error with the module\'s cache dir creation/existence (rights problem most likely).');
 			// check if C3KEYWORDS_NB was provided

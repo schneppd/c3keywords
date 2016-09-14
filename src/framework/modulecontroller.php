@@ -12,6 +12,7 @@ abstract class ModuleController {
 	protected static $model = null;
 	protected static $isInitialized = false;
 	protected static $moduleInformations = null;
+	protected static $isCacheCreated = false;
 
 	public function __construct($infos, $databaseConnection) {
 		if(!static::$isInitialized){
@@ -56,14 +57,20 @@ abstract class ModuleController {
 		$dir = static::$moduleInformations->getModuleCachePath();
 		if(ModuleIO::existDirectory($dir))
 			return true;
-		return ModuleIO::createDirectory($dir);
+		static::$isCacheCreated = ModuleIO::createDirectory($dir);
+		return static::$isCacheCreated;
 	}
 	
 	public static function uninstallModuleCache() {
 		$dir = static::$moduleInformations->getModuleCachePath();
 		if(ModuleIO::existDirectory($dir))
 			ModuleIO::emptyAndDeleteDirectory($dir);
+		static::$isCacheCreated = false;
 		return true;
+	}
+	
+	public static function isModuleCacheCreated() {
+		return static::$isCacheCreated;
 	}
 	
 	/*
