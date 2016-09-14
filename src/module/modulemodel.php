@@ -1,6 +1,6 @@
 <?php
 
-namespace NsC3Keywords;
+namespace NsC3KeywordsModule;
 
 if (!defined('_PS_VERSION_'))
 	exit;
@@ -10,18 +10,20 @@ if (!defined('_PS_VERSION_'))
  */
 
 // common module logic
-class C3ModuleModel {
-	protected $database;
-	protected $prefix;
-	protected $useSqlSlave;
+class ModuleModel {
+	private static $database;
 
 	public function __construct($db) {
-		$this->database = $db;
+		static::$database = $db;
 	}
-	public function setDatabaseInformations($db, $dbPrefix, $useSqlSlave){
-		$this->database = $db;
-		$this->prefix = $dbPrefix;
-		$this->useSqlSlave = $useSqlSlave;
+	public static function executeQueries($queries) {
+		foreach ($queries as $query) {
+			if ($query != '') {
+				if (!static::$database->Execute(trim($query)))
+					return false; //abort if sql error
+			}
+		}
+		return true; //success
 	}
 	/*
 	 * read the content of given file and executes it, !!! always put this file in root directory

@@ -8,12 +8,12 @@
 if (!defined('_PS_VERSION_'))
 	exit;
 
-require_once(dirname(__FILE__) . '/class/c3modulecontroller.php');
+require_once(dirname(__FILE__) . '/src/module/keywordscontroller.php');
+require_once(dirname(__FILE__) . '/src/framework/databaseconnection.php');
+require_once(dirname(__FILE__) . '/src/framework/moduleinformations.php');
 
 class C3Keywords extends Module {
 
-	use \NsC3Keywords\C3ModuleController;
-	
 	protected $controller;
 	
 	function __construct() {
@@ -33,23 +33,24 @@ class C3Keywords extends Module {
 		$this->description = $this->l("Adds C3's list of most common product tags per category in front-end.");
 		$this->ps_versions_compliancy = array('min' => '1.6', 'max' => _PS_VERSION_);
 		
-		//custom logic
-		$this->controller = new \NsC3Keywords\C3ModuleController($this->name);
-		$this->controller->setupDatabaseInformations(Db, _DB_PREFIX_, _PS_USE_SQL_SLAVE_);
-		$this->controller->pathModule(dirname(__FILE__));
-	}
+		$this->customizeModuleConstruction();
 
+	}
+	
+	protected function customizeModuleConstruction() {
+		$moduleInformations = new \NsC3Framework\ModuleInformations($this->name, dirname(__FILE__), _PS_CACHE_DIR_, _DB_PREFIX_);
+		$dbConnection = new \NsC3Framework\DatabaseConnection(Db, _DB_PREFIX_, _PS_USE_SQL_SLAVE_);
+		$this->controller = new \NsC3KeywordsModule\KeywordsController($moduleInformations, $dbConnection);
+	}
+	
 	/*
 	 * steps to execute when the module is installed
 	 * @return bool if the installation succeed
 	 */
 	function install() {
-		// create module's sql
-		if (!NsC3Keywords\C3ModuleController::executeSqlFile(Db::getInstance(), 'install'))
+		if(!$this->controller->installModuleInDatabase())
 			return false;
-
-		// create custom cache directory to store cached data
-		if (!NsC3Keywords\C3ModuleController::createModuleCacheDir($this->name))
+		if(!$this->controller->installModuleCache())
 			return false;
 
 		// clear cache to delete possible afterfacts
@@ -79,12 +80,9 @@ class C3Keywords extends Module {
 		// clear cache to delete possible afterfacts
 		$this->_clearCache('*');
 
-		// delete custom cache dir and it's content
-		if (!NsC3Keywords\C3ModuleController::removeModuleCacheDir($this->name))
+		if(!$this->controller->uninstallModuleInDatabase())
 			return false;
-		
-		// execute uninstall sql
-		if (!NsC3Keywords\C3ModuleController::executeSqlFile(Db::getInstance(), 'uninstall'))
+		if(!$this->controller->uninstallModuleCache())
 			return false;
 
 		// uninstall module from hooks
@@ -137,12 +135,7 @@ class C3Keywords extends Module {
 		// get current id_category
 		$id_category = (int) (Tools::getValue('id_category'));
 		if ($id_category > 0) {
-			$cacheId = 'c3keywords_' . $id_category;
-			$cacheFile = $cacheId . '.cache';
-			$cachePath = NsC3Keywords\C3ModuleController::getModuleCacheFilePath($this->name, $cacheFile);
-			// return previous cached value
-			$res = trim(file_get_contents($cachePath));
-			return $res;
+			return $this->controller->getCachedTagsList($id_category);
 		}
 	}
 
