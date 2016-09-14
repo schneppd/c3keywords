@@ -3,7 +3,7 @@
 	<name>c3keywords</name>
 	<displayName><![CDATA[C3 Tags module]]></displayName>
 	<version><![CDATA[1.0.0]]></version>
-	<description><![CDATA[Adds C3's tag list in front-categories.]]></description>
+	<description><![CDATA[Adds C3's list of most common product tags per category in front-end.]]></description>
 	<author><![CDATA[Schnepp David]]></author>
 	<tab><![CDATA[front_office_features]]></tab>
 	<is_configurable>1</is_configurable>
