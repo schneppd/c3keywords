@@ -16,11 +16,11 @@ class KeywordsController extends \NsC3Framework\ModuleController {
 		static::$model = new KeywordsModel($databaseConnection);
 	}
 	
-	public function getCachedTagsList(&$id_category) {
-		$id = 'c3keywords_' . $id_category;
-		$file = $id . '.cache';
+	public function getCachedTagsListHtml(&$id_category) {
+		$file = 'c3keywords_' . $id_category .'.cache';
 		$path = static::$moduleInformations->getModuleCacheFilePath($file);
-		$html = tim(ModuleIO::getFileContentToString($path));
+		$rawHtml = ModuleIO::getFileContentToString($path);
+		$html = tim($rawHtml);
 		return $html;
 	}
 	

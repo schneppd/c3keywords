@@ -23,15 +23,22 @@ abstract class ModuleController {
 	
 	public static function installModuleInDatabase() {
 		$file = static::$moduleInformations->getModuleInstallationSqlFile();
-		return static::executeFileQueries($file);
+		return static::convertFileContentToQueriesAndExecute($file);
 	}
 	
 	public static function uninstallModuleInDatabase() {
 		$file = static::$moduleInformations->getModuleUninstallationSqlFile();
-		return static::executeFileQueries($file);
+		return static::convertFileContentToQueriesAndExecute($file);
 	}
 	
-	public static function executeFileQueries($file) {
+	protected static function convertFileContentToQueriesAndExecute($file) {
+		$queries = static::convertFileContentToQueries($file);
+		if(!$queries)
+			return false;
+		return static::$model->executeQueries($queries);
+	}
+	
+	protected static function convertFileContentToQueries($file) {
 		if(!ModuleIO::existFile($file))
 			return false;
 		$rawSql = ModuleIO::getFileContentToString($file);
@@ -39,7 +46,7 @@ abstract class ModuleController {
 		if(!$sql)
 			return false;
 		$queries = static::splitSqlTextInQueries($sql);
-		return static::$model->executeQueries($queries);
+		return $queries;
 	}
 	
 	protected static function convertRawTextToSqlText($rawSql) {
