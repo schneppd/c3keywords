@@ -35,14 +35,14 @@ abstract class ModuleController {
 		if(!ModuleIO::existFile($file))
 			return false;
 		$rawSql = ModuleIO::getFileContentToString($file);
-		$sql = static::correctRawSql($rawSql);
+		$sql = static::convertRawTextToSqlText($rawSql);
 		if(!$sql)
 			return false;
 		$queries = static::splitSqlInQueries($sql);
 		return static::$model->executeQueries($queries);
 	}
 	
-	protected static function correctRawSql($rawSql) {
+	protected static function convertRawTextToSqlText($rawSql) {
 		$sql = str_replace('PREFIX_', static::$moduleInformations->getPrestashopPrefix(), $rawSql);
 		$sqlr = str_replace("\r", '', $sql);
 		$res = str_replace("\n", '', $sqlr);
