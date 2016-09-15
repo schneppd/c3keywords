@@ -5,25 +5,19 @@ namespace NsC3Framework;
 class ModuleIO {
 	
 	public static function existDirectory($dirPath) {
-		if (file_exists($dirPath))
-			return true;
-		return false;
+		return file_exists($dirPath);
 	}
 	public static function existFile($filePath) {
-		if (file_exists($filePath))
-			return true;
-		return false;
+		return file_exists($filePath);
 	}
 	
 	public static function createDirectory($dirPath) {
-		if (!mkdir($dirPath, 0755, false))
-			return false;
-		return true; //success
+		return mkdir($dirPath, 0755, false);
 	}
 	
 	public static function emptyAndDeleteDirectory($dirPath) {
 		if (static::existDirectory($dirPath)) {
-			//empty dir of content
+			//empty the dir of its content
 			$files = scandir($dirPath);
 			foreach ($files as $file) {
 				if (filetype($dirPath . "/" . $file) == "file") {
@@ -31,7 +25,7 @@ class ModuleIO {
 					static::deleteFile($filePath);
 				}
 			}
-			//delete dir
+			//delete empty dir
 			rmdir($dirPath);
 		}
 
@@ -53,7 +47,8 @@ class ModuleIO {
 	}
 	
 	public static function writeStringToFile($str, $filePath) {
-		$res = file_get_contents($filePath);
-		return $res;
+		$file = fopen($filePath, "w") or die("Unable to open cache!");
+		fwrite($file, $str);
+		fclose($file);
 	}
 }

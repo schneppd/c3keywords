@@ -36,7 +36,7 @@ class KeywordsController extends \NsC3Framework\ModuleController {
 		return $caches;
 	}
 	
-	public function regenTagListCache(&$cacheId, &$html) {
+	public function regenerateTagListCache(&$cacheId, &$html) {
 		$cacheFileName = $cacheId . '.cache';
 		$cacheFile = static::$moduleInformations->getModuleCacheFilePath($cacheFileName);
 		ModuleIO::safeDeleteFile($cacheFile);
