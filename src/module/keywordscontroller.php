@@ -47,7 +47,7 @@ class KeywordsController extends \NsC3Framework\ModuleController {
 	public function canDisplayTagList(&$id_category) {
 		$file = 'c3keywords_' . $id_category. '.cache';
 		$filePath = static::$moduleInformations->getModuleCacheFilePath($file);
-		return ModuleIO::existFile($filePath);
+		return \NsC3Framework\ModuleIO::existFile($filePath);
 	}
 
 }
