@@ -136,7 +136,9 @@ class C3Keywords extends Module {
 		// get current id_category
 		$id_category = (int) (Tools::getValue('id_category'));
 		if ($id_category > 0) {
-			return $this->controller->getCachedTagsListHtml($id_category);
+			if($this->controller->hasCategoryACacheFile($id_category)) {
+				return $this->controller->getCachedTagsListHtml($id_category);
+			}
 		}
 	}
 

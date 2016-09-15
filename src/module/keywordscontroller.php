@@ -43,5 +43,11 @@ class KeywordsController extends \NsC3Framework\ModuleController {
 		\NsC3Framework\ModuleIO::safeDeleteFile($cacheFile);
 		\NsC3Framework\ModuleIO::writeStringToFile($html, $cacheFile);
 	}
+	
+	public function hasCategoryACacheFile(&$id_category) {
+		$file = 'c3keywords_' . $id_category. '.cache';
+		$filePath = static::$moduleInformations->getModuleCacheFilePath($file);
+		return ModuleIO::existFile($filePath);
+	}
 
 }
