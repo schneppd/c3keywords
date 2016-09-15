@@ -206,8 +206,10 @@ class C3Keywords extends Module {
 	
 	protected function cacheTagsLists($tagsLists) {
 		foreach ($tagsLists as $cacheId => $tags) {
-			$html = $this->convertTagListToHtml($cacheId, $tags);
-			$this->controller->regenerateTagListCache($cacheId, $html);
+			if(count($tags) > 0) {
+				$html = $this->convertTagListToHtml($cacheId, $tags);
+				$this->controller->regenerateTagListCache($cacheId, $html);
+			}
 		}
 	}
 	
