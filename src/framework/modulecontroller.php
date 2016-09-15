@@ -14,10 +14,9 @@ abstract class ModuleController {
 	protected static $moduleInformations = null;
 	protected static $isCacheCreated = false;
 
-	public function __construct($infos, $databaseConnection) {
+	public function __construct($infos) {
 		if(!static::$isInitialized){
 			static::$moduleInformations = $infos;
-			static::$model = new C3ModuleModel($databaseConnection);
 			static::$isInitialized = true;
 		}
 	}

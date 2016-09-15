@@ -171,49 +171,49 @@ class C3Keywords extends Module {
 			else {
 				// update module values
 				Configuration::updateValue('C3KEYWORDS_NB', (int) $maxTagPerCategory);
+				$this->regenerateTagsListsCaches();
 				
-				//get categories
-				$sql = 'SELECT id_category FROM `' . _DB_PREFIX_ . 'category` WHERE active=1 AND id_parent > 0';
-				$categories = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
-
-				// get current lang
-				$id_lang = (int) $this->context->language->id;
-				//generate each tag cach file per category
-				foreach ($categories as $row) {
-					//get cache file path
-					$id_category = (int) $row['id_category'];
-					$cacheId = 'c3keywords_' . $id_category;
-					$cacheFile = $cacheId.'.cache';
-					$cachePath = NsC3Keywords\C3ModuleController::getModuleCacheFilePath($this->name, $cacheFile);
-					//delete previous file if exists
-					NsC3Keywords\C3ModuleController::deleteFile($cachePath);
-
-					// setup the query
-					$sql = 'SELECT tag_name, nb_occurrence FROM `' . _DB_PREFIX_ . 'vc3keywords` WHERE id_lang = ' . $id_lang . ' AND id_category = ' . $id_category . ' LIMIT ' . (int) $maxTagPerCategory;
-					// get tags
-					$tags = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql); //should had groups
-					// if no tags
-					if (!count($tags))
-						$errors[] = $this->l('No tags found for category ' . $id_category);
-					else {
-						//add link to rows data
-						for ($i = 0; $i < count($tags); $i++)
-							$tags[$i]['link'] = $this->context->link->getPageLink('search', true, NULL, 'tag=' . urlencode($tags[$i]['tag_name']));
-					}
-					// gives tags to smarty
-					$this->smarty->assign(array('tags' => $tags));
-					$res = $this->display(__FILE__, 'views/templates/front/c3keywords.tpl', $this->getCacheId($cacheId));
-
-					// save cache to file
-					NsC3Keywords\C3ModuleController::writeStringToModuleCache($this->name, $cacheFile, $res);
-				}
-
 				$output = $this->displayConfirmation($this->l('Tagblocks generated'));
 			}
 		}
 		return $output . $this->renderForm();
 	}
-
+	
+	protected function regenerateTagsListsCaches() {
+		$maxTagPerCategory = (int)Tools::getValue('C3KEYWORDS_NB');
+		$id_lang = (int) $this->context->language->id;
+		$tagsLists = $this->controller->getProductTagsPerCategoryList($id_lang, $maxTagPerCategory);
+		$tagsListsWithLinks = $this->addPrestashopTagLinkToTags($tagsLists);
+		$this->cacheTagsLists($tagsListsWithLinks);
+	}
+	
+	protected function addPrestashopTagLinkToTags($tagList) {
+		foreach ($tagsLists as $cacheId => $tags) {
+			if(!count($tags)) {
+				//this category don't have any tags / no products
+				continue;
+			} else {
+				for ($i = 0; $i < count($tags); $i++) {
+					$tags[$i]['link'] = $this->context->link->getPageLink('search', true, NULL, 'tag=' . urlencode($tags[$i]['tag_name']));
+				}
+			}
+		}
+		return $tagsLists;
+	}
+	
+	protected function cacheTagsLists($tagsLists) {
+		foreach ($tagsLists as $cacheId => $tags) {
+			$html = $this->convertTagListToHtml($cacheId, $tags);
+			$this->controller->regenTagListCache($cacheId, $html);
+		}
+	}
+	
+	protected function convertTagListToHtml(&$cacheId, &$tags) {
+		$this->smarty->assign(array('tags' => $tags));
+		$html = $this->display(__FILE__, 'views/templates/front/c3keywords.tpl', $cacheId);
+		return $html;
+	}
+	
 	// backend form creation
 	public function renderForm() {
 		// setup form fields

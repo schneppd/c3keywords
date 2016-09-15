@@ -12,4 +12,16 @@ class DatabaseConnection {
 		$this->prestashopPrefix = $prefix;
 		$this->isSqlSlave = $isSlave;
 	}
+	
+	public function getDatabaseInstance() {
+		return $this->prestashopDatabase->getInstance();
+	}
+	
+	public function getDatabaseSlavedInstance() {
+		return $this->prestashopDatabase->getInstance($this->isSqlSlave);
+	}
+	
+	public function getDatabasePrefix() {
+		return $this->prestashopPrefix;
+	}
 }

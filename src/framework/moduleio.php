@@ -41,9 +41,19 @@ class ModuleIO {
 		unlink($filePath);
 	}
 	
+	public static function safeDeleteFile($filePath) {
+		if(static::existFile($filePath)) {
+			static::deleteFile($filePath);
+		}
+	}
+	
 	public static function getFileContentToString($filePath) {
 		$res = file_get_contents($filePath);
 		return $res;
 	}
 	
+	public static function writeStringToFile($str, $filePath) {
+		$res = file_get_contents($filePath);
+		return $res;
+	}
 }
