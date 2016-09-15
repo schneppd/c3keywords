@@ -38,7 +38,7 @@ abstract class ModuleController {
 		$sql = static::convertRawTextToSqlText($rawSql);
 		if(!$sql)
 			return false;
-		$queries = static::splitSqlInQueries($sql);
+		$queries = static::splitSqlTextInQueries($sql);
 		return static::$model->executeQueries($queries);
 	}
 	
@@ -48,8 +48,16 @@ abstract class ModuleController {
 		$res = str_replace("\n", '', $sqlr);
 		return $res;
 	}
-	protected static function splitSqlInQueries($sql) {
-		return explode("/;", $sql);
+	protected static function splitSqlTextInQueries($sql) {
+		$queries = [];
+		$rawQueries = explode("/;", $sql);
+		foreach($rawQueries as $rawQuery){
+			if(!empty($rawQuery)) {
+				$query = trim($rawQuery);
+				array_push($queries, $query);
+			}
+		}
+		return $queries;
 	}
 	
 	public static function installModuleCache() {

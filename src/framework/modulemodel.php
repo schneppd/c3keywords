@@ -16,8 +16,6 @@ class ModuleModel {
 	}
 	public static function executeQueries($queries) {
 		foreach ($queries as $query) {
-			if (static::isEmptyQuery($query))
-				continue;
 			$hasQuerySucceeded = static::executeQuery($query);
 			if(!$hasQuerySucceeded)
 				return false;
@@ -25,14 +23,8 @@ class ModuleModel {
 		return true; //success
 	}
 	
-	public static function isEmptyQuery($query) {
-		if($query == '')
-			return true;
-		return false;
-	}
-	
 	public static function executeQuery($query) {
-		return $this->database->Execute(trim($query));
+		return $this->database->getDatabaseInstance()->Execute($query);
 	}
 
 }
