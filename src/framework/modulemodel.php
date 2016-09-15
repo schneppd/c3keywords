@@ -35,7 +35,7 @@ class ModuleModel {
 	 * @author Schnepp David
 	 * @since 2016/09/13
 	 * @param array[string] $queries the queries to execute
-	 * @return bool if all queries executed without errors
+	 * @return boolean if all queries executed without errors
 	 * @todo add try,catch and exceptions handling
 	 */
 	public function executeQueries($queries) {
@@ -53,7 +53,7 @@ class ModuleModel {
 	 * @author Schnepp David
 	 * @since 2016/09/13
 	 * @param string $query the query to execute
-	 * @return bool if the query executed without errors
+	 * @return boolean if the query executed without errors
 	 * @todo add try,catch and exceptions handling
 	 */
 	public function executeQuery($query) {

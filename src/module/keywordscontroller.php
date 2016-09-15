@@ -26,7 +26,7 @@ class KeywordsController extends \NsC3Framework\ModuleController {
 	 */
 	public function __construct($infos, $databaseConnection) {
 		parent::__construct($infos);
-		static::$model = new KeywordsModel($databaseConnection);
+		$this->model = new KeywordsModel($databaseConnection);
 	}
 	
 	/*
@@ -56,11 +56,11 @@ class KeywordsController extends \NsC3Framework\ModuleController {
 	 */
 	public function getProductTagsPerCategoryList($id_lang, $maxTagPerCategory) {
 		$caches = [];
-		$categories = static::$model->getCategories();
+		$categories = $this->model->getCategories();
 		foreach ($categories as $category) {
 			$id_category = (int) $category['id_category'];
 			$cacheId = 'c3keywords_' . $id_category;
-			$tags = static::$model->getMostCommonProductTagsPerCategory($id_lang, $id_category, $maxTagPerCategory);
+			$tags = $this->model->getMostCommonProductTagsPerCategory($id_lang, $id_category, $maxTagPerCategory);
 			$caches[$cacheId] = $tags;
 		}
 		return $caches;
@@ -82,12 +82,12 @@ class KeywordsController extends \NsC3Framework\ModuleController {
 	}
 	
 	/*
-	 * Returns if provided category's cache file exists
+	 * Returns if provided category's cache file exists and can be read to frontend
 	 * 
 	 * @author Schnepp David
 	 * @since 2016/09/14
 	 * @param int $id_category the category to check cache file's existence
-	 * @return bool if the category's cache file exists
+	 * @return boolean if the category's cache file exists
 	 */
 	public function canDisplayTagList(&$id_category) {
 		$file = 'c3keywords_' . $id_category. '.cache';
