@@ -1,6 +1,9 @@
 <?php
 /*
- * This module is used to show the most common keywords between each products per category as a list in the front-end's left column
+ * This module is used to show the most common product's keywords per category as a list in the front-end's left column
+ * if the category doesn't have products or it's products don't have tags, nothing will be shown
+ * @author Schnepp David <david.schnepp@schneppd.com>
+ * @since 2016/09/13
  * @param int C3KEYWORDS_NB the max number of keywords to show per category
  */
 
@@ -16,8 +19,20 @@ require_once(dirname(__FILE__) . '/src/framework/moduleinformations.php');
 
 class C3Keywords extends Module {
 
+	/*
+	* The module's controller
+	* 
+	* @author Schnepp David
+	* @since 2016/09/13
+	*/
 	protected $controller;
 	
+	/*
+	 * the module constructor
+	 * 
+	 * @author Schnepp David
+	 * @since 2016/09/14
+	 */
 	function __construct() {
 		//setup this module's basic informations
 		$this->name = 'c3keywords';
@@ -38,6 +53,12 @@ class C3Keywords extends Module {
 
 	}
 	
+	/*
+	* Create the controller for this module and read the module's execution context
+	* 
+	* @author Schnepp David
+	* @since 2016/09/13
+	*/
 	protected function customizeModuleConstruction() {
 		$moduleInformations = new \NsC3Framework\ModuleInformations($this->name, dirname(__FILE__), _PS_CACHE_DIR_, _DB_PREFIX_);
 		$dbConnection = new \NsC3Framework\DatabaseConnection(Db::getInstance(_PS_USE_SQL_SLAVE_), _DB_PREFIX_);
@@ -45,9 +66,12 @@ class C3Keywords extends Module {
 	}
 	
 	/*
-	 * steps to execute when the module is installed
-	 * @return bool if the installation succeed
-	 */
+	* The module's installation steps
+	* 
+	* @author Schnepp David
+	* @since 2016/09/13
+	* @return boolean if the installation succeeded
+	*/
 	function install() {
 		if(!$this->controller->installModuleInDatabase())
 			return false;
@@ -74,9 +98,12 @@ class C3Keywords extends Module {
 	}
 
 	/*
-	 * steps to execute when the module is uninstalled
-	 * @return bool if the uninstallation succeed
-	 */
+	* The module's uninstallation steps
+	* 
+	* @author Schnepp David
+	* @since 2016/09/13
+	* @return boolean if the uninstallation succeeded
+	*/
 	public function uninstall() {
 		// clear cache to delete possible afterfacts
 		$this->_clearCache('*');
@@ -94,44 +121,66 @@ class C3Keywords extends Module {
 	}
 
 	/*
-	 * clear cached data in template
-	 */
+	* Clears cache's template data
+	* 
+	* @author Schnepp David
+	* @since 2016/09/13
+	*/
 	protected function _clearCache($template, $cache_id = NULL, $compile_id = NULL) {
 		parent::_clearCache('c3keywords.tpl');
 	}
 
 	/*
-	 * clear cached data in template if a product is added in shop
-	 */
+	* Steps to execute after product add in the shop
+	* 
+	* @author Schnepp David
+	* @since 2016/09/13
+	*/
 	public function hookAddProduct($params) {
+		//clear cached data in template if a product is added in shop
 		$this->_clearCache('c3keywords.tpl');
 	}
 
 	/*
-	 * clear cached data in template if a product is updated in shop
-	 */
+	* Steps to execute after product update in the shop
+	* 
+	* @author Schnepp David
+	* @since 2016/09/13
+	*/
 	public function hookUpdateProduct($params) {
+		//clear cached data in template if a product is updated in shop
 		$this->_clearCache('c3keywords.tpl');
 	}
 
 	/*
-	 * clear cached data in template if a product is deleted in shop
-	 */
+	* Steps to execute after product delete in the shop
+	* 
+	* @author Schnepp David
+	* @since 2016/09/13
+	*/
 	public function hookDeleteProduct($params) {
+		//clear cached data in template if a product is deleted in shop
 		$this->_clearCache('c3keywords.tpl');
 	}
 
 	/*
-	 * add module css to head hook
-	 */
+	* Defines css files to add to head hook
+	* 
+	* @author Schnepp David
+	* @since 2016/09/13
+	*/
 	public function hookHeader($params) {
 		$this->context->controller->addCSS(($this->_path) . 'views/css/c3keywords.css', 'all');
 	}
 
 	/*
-	 * add module css to head hook
-	 * @return bool if the process succeed
-	 */
+	* Defines content to show in frontend's left column
+	* if current category has a cache file defined, display it's content
+	* 
+	* @author Schnepp David
+	* @since 2016/09/13
+	* @return void | string the html content to display
+	*/
 	public function hookLeftColumn($params) {
 		// get current id_category
 		$id_category = (int) (Tools::getValue('id_category'));
@@ -143,16 +192,23 @@ class C3Keywords extends Module {
 	}
 
 	/*
-	 * redirect right column to left
-	 */
+	* Redirect right column logic to left
+	* 
+	* @author Schnepp David
+	* @since 2016/09/13
+	*/
 	public function hookRightColumn($params) {
 		return $this->hookLeftColumn($params);
 	}
 
 	/*
-	 * process backend form post for module
-	 * @return string html response
-	 */
+	* Process backend form post for module
+	* here on each call, all the cache files will be regenerate
+	* 
+	* @author Schnepp David
+	* @since 2016/09/13
+	* @return string the html content to display
+	*/
 	public function getContent() {
 		$output = null;
 		$errors = array();
@@ -182,14 +238,30 @@ class C3Keywords extends Module {
 		return $output . $this->renderForm();
 	}
 	
+	/*
+	* Get each category C3KEYWORDS_NB's most common tags
+	* add prestashop link (for template) to them
+	* create corresponding cache files
+	* 
+	* @author Schnepp David
+	* @since 2016/09/13
+	*/
 	protected function regenerateTagsListsCaches() {
 		$maxTagPerCategory = (int)Tools::getValue('C3KEYWORDS_NB');
 		$id_lang = (int) $this->context->language->id;
 		$tagsLists = $this->controller->getProductTagsPerCategoryList($id_lang, $maxTagPerCategory);
 		$tagsListsWithLinks = $this->addPrestashopTagLinkToTags($tagsLists);
-		$this->cacheTagsLists($tagsListsWithLinks);
+		$this->recreateTagsListsCacheFile($tagsListsWithLinks);
 	}
 	
+	/*
+	* Process $tagsLists to add the corresponding prestashop link to each tag
+	* 
+	* @author Schnepp David
+	* @since 2016/09/13
+	* @param mixed $tagsLists list of C3KEYWORDS_NB's most common product tags per category
+	* @return mixed the list processed where each tag has a value for link (used in template)
+	*/
 	protected function addPrestashopTagLinkToTags($tagsLists) {
 		foreach ($tagsLists as $cacheId => $tags) {
 			if(!count($tags)) {
@@ -204,7 +276,14 @@ class C3Keywords extends Module {
 		return $tagsLists;
 	}
 	
-	protected function cacheTagsLists($tagsLists) {
+	/*
+	* Process $tagsLists to order the creation of corresponding cache files
+	* 
+	* @author Schnepp David
+	* @since 2016/09/13
+	* @param mixed $tagsLists list of C3KEYWORDS_NB's most common product tags per category
+	*/
+	protected function recreateTagsListsCacheFile($tagsLists) {
 		foreach ($tagsLists as $cacheId => $tags) {
 			if(count($tags) > 0) {
 				$html = $this->convertTagListToHtml($cacheId, $tags);
@@ -213,13 +292,28 @@ class C3Keywords extends Module {
 		}
 	}
 	
+	/*
+	* Process $tags data with templates/front/c3keywords to get final html to display in fronted
+	* 
+	* @author Schnepp David
+	* @since 2016/09/13
+	* @param string $cacheId the cacheId part of the cache file (contains id_category), used for smarty id
+	* @param mixed $tags list of C3KEYWORDS_NB's most common product tags per category
+	* @return string processed html
+	*/
 	protected function convertTagListToHtml(&$cacheId, &$tags) {
 		$this->smarty->assign(array('tags' => $tags));
 		$html = $this->display(__FILE__, 'views/templates/front/c3keywords.tpl', $cacheId);
 		return $html;
 	}
 	
-	// backend form creation
+	/*
+	* Create form to show in module's backend interface
+	* 
+	* @author Schnepp David
+	* @since 2016/09/13
+	* @return string final html
+	*/
 	public function renderForm() {
 		// setup form fields
 		$fields_form = array(
@@ -269,7 +363,13 @@ class C3Keywords extends Module {
 		return $helper->generateForm(array($fields_form));
 	}
 
-	// output config fields to array
+	/*
+	* Return config fields as array for backend form
+	* 
+	* @author Schnepp David
+	* @since 2016/09/13
+	* @return array the fields for backend form
+	*/
 	public function getConfigFieldsValues() {
 		return array(
 			 'C3KEYWORDS_NB' => Tools::getValue('C3KEYWORDS_NB', (int) Configuration::get('C3KEYWORDS_NB')),
