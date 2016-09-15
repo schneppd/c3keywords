@@ -2,7 +2,7 @@
 /*
  * Manage interactions between KeywordsController and the database of the shop
  * 
- * @author Schnepp David
+ * @author Schnepp David <david.schnepp@schneppd.com>
  * @since 2016/09/13
  */
 
