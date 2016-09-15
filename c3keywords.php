@@ -23,7 +23,6 @@ class C3Keywords extends Module {
 		$this->version = '1.0.0';
 		$this->author = 'Schnepp David';
 		$this->need_instance = 0;
-		$this->declareModuleInformations();
 
 		$this->bootstrap = true;
 		parent::__construct();
