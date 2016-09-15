@@ -3,22 +3,20 @@
 namespace NsC3Framework;
 
 class DatabaseConnection {
-	private $prestashopDatabase;
+	private $prestashopDatabaseInstance;
 	private $prestashopPrefix;
-	private $isSqlSlave;
 	
-	public function __construct($db, $prefix, $isSlave) {
-		$this->prestashopDatabase = $db;
+	public function __construct($db, $prefix) {
+		$this->prestashopDatabaseInstance = $db;
 		$this->prestashopPrefix = $prefix;
-		$this->isSqlSlave = $isSlave;
 	}
 	
 	public function getDatabaseInstance() {
-		return $this->prestashopDatabase->getInstance();
+		return $this->prestashopDatabaseInstance;
 	}
 	
 	public function getDatabaseSlavedInstance() {
-		return $this->prestashopDatabase->getInstance($this->isSqlSlave);
+		return $this->prestashopDatabaseInstance;
 	}
 	
 	public function getDatabasePrefix() {

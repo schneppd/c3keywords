@@ -15,14 +15,14 @@ class KeywordsModel extends \NsC3Framework\ModuleModel {
 		parent::__construct($db);
 	}
 	
-	public static function getCategories() {
+	public function getCategories() {
 		$sql = 'SELECT id_category FROM `' . $this->database->getDatabasePrefix() . 'category` WHERE active=1 AND id_parent > 0';
-		return $this->database->getDatabaseSlavedInstance()->executeS($sql);
+		return $this->database->getDatabaseInstance()->executeS($sql);
 	}
 	
-	public static function getMostCommonProductTagsPerCategory($id_lang, $id_category, $maxTagPerCategory) {
+	public function getMostCommonProductTagsPerCategory($id_lang, $id_category, $maxTagPerCategory) {
 		$sql = 'SELECT tag_name, nb_occurrence FROM `' . $this->database->getDatabasePrefix() . 'vc3keywords` WHERE id_lang = ' . $id_lang . ' AND id_category = ' . $id_category . ' LIMIT ' . $maxTagPerCategory;
-		return $this->database->getDatabaseSlavedInstance()->executeS($sql);
+		return $this->database->getDatabaseInstance()->executeS($sql);
 	}
 
 }

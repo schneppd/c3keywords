@@ -4,6 +4,7 @@ namespace NsC3KeywordsModule;
 
 include_once(dirname(__FILE__) . '/keywordsmodel.php');
 include_once(dirname(__FILE__) . '/../framework/modulecontroller.php');
+include_once(dirname(__FILE__) . '/../framework/moduleio.php');
 /*
  * Basic c3 module logic 
  */
@@ -19,8 +20,8 @@ class KeywordsController extends \NsC3Framework\ModuleController {
 	public function getCachedTagsListHtml(&$id_category) {
 		$file = 'c3keywords_' . $id_category .'.cache';
 		$path = static::$moduleInformations->getModuleCacheFilePath($file);
-		$rawHtml = ModuleIO::getFileContentToString($path);
-		$html = tim($rawHtml);
+		$rawHtml = \NsC3Framework\ModuleIO::getFileContentToString($path);
+		$html = trim($rawHtml);
 		return $html;
 	}
 	
@@ -39,8 +40,8 @@ class KeywordsController extends \NsC3Framework\ModuleController {
 	public function regenerateTagListCache(&$cacheId, &$html) {
 		$cacheFileName = $cacheId . '.cache';
 		$cacheFile = static::$moduleInformations->getModuleCacheFilePath($cacheFileName);
-		ModuleIO::safeDeleteFile($cacheFile);
-		ModuleIO::writeStringToFile($html, $cacheFile);
+		\NsC3Framework\ModuleIO::safeDeleteFile($cacheFile);
+		\NsC3Framework\ModuleIO::writeStringToFile($html, $cacheFile);
 	}
 
 }

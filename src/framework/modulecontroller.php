@@ -70,7 +70,7 @@ abstract class ModuleController {
 		if(static::isModuleCacheCreated())
 			return true;
 		$dir = static::$moduleInformations->getModuleCachePath();
-		static::$isCacheCreated = ModuleIO::createDirectory($dir);
+		return ModuleIO::createDirectory($dir);
 	}
 	
 	public static function uninstallModuleCache() {

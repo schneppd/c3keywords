@@ -14,16 +14,16 @@ class ModuleModel {
 	public function __construct($db) {
 		$this->database = $db;
 	}
-	public static function executeQueries($queries) {
+	public function executeQueries($queries) {
 		foreach ($queries as $query) {
-			$hasQuerySucceeded = static::executeQuery($query);
+			$hasQuerySucceeded = $this->executeQuery($query);
 			if(!$hasQuerySucceeded)
 				return false;
 		}
 		return true; //success
 	}
 	
-	public static function executeQuery($query) {
+	public function executeQuery($query) {
 		return $this->database->getDatabaseInstance()->Execute($query);
 	}
 

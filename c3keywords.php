@@ -8,6 +8,8 @@
 if (!defined('_PS_VERSION_'))
 	exit;
 
+include_once(dirname(__FILE__).'/../../config/config.inc.php');
+
 require_once(dirname(__FILE__) . '/src/module/keywordscontroller.php');
 require_once(dirname(__FILE__) . '/src/framework/databaseconnection.php');
 require_once(dirname(__FILE__) . '/src/framework/moduleinformations.php');
@@ -38,7 +40,7 @@ class C3Keywords extends Module {
 	
 	protected function customizeModuleConstruction() {
 		$moduleInformations = new \NsC3Framework\ModuleInformations($this->name, dirname(__FILE__), _PS_CACHE_DIR_, _DB_PREFIX_);
-		$dbConnection = new \NsC3Framework\DatabaseConnection(Db, _DB_PREFIX_, _PS_USE_SQL_SLAVE_);
+		$dbConnection = new \NsC3Framework\DatabaseConnection(Db::getInstance(_PS_USE_SQL_SLAVE_), _DB_PREFIX_);
 		$this->controller = new \NsC3KeywordsModule\KeywordsController($moduleInformations, $dbConnection);
 	}
 	
@@ -186,7 +188,7 @@ class C3Keywords extends Module {
 		$this->cacheTagsLists($tagsListsWithLinks);
 	}
 	
-	protected function addPrestashopTagLinkToTags($tagList) {
+	protected function addPrestashopTagLinkToTags($tagsLists) {
 		foreach ($tagsLists as $cacheId => $tags) {
 			if(!count($tags)) {
 				//this category don't have any tags / no products
