@@ -12,7 +12,7 @@ namespace NsC3Framework;
 class DatabaseConnection {
 	
 	/*
-	* Database cursor
+	* Database instance fro the module queries
 	* 
 	* @author Schnepp David
 	* @since 2016/09/13

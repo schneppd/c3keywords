@@ -3,7 +3,7 @@
  * Manage interactions between KeywordsController and the database of the shop
  * 
  * @author Schnepp David <david.schnepp@schneppd.com>
- * @since 2016/09/13
+ * @since 2016/09/14
  */
 
 namespace NsC3KeywordsModule;
@@ -16,7 +16,7 @@ class KeywordsModel extends \NsC3Framework\ModuleModel {
 	 * the constructor
 	 * 
 	 * @author Schnepp David
-	 * @since 2016/09/13
+	 * @since 2016/09/14
 	 * @param DatabaseConnection $db the database instance used for each query
 	 */
 	public function __construct($db) {
@@ -27,7 +27,7 @@ class KeywordsModel extends \NsC3Framework\ModuleModel {
 	 * query and return the list of categories in this shop, except root (nothing to display)
 	 * 
 	 * @author Schnepp David
-	 * @since 2016/09/13
+	 * @since 2016/09/14
 	 * @return mixed[] the list of categories in this shop
 	 */
 	public function getCategories() {
@@ -39,7 +39,7 @@ class KeywordsModel extends \NsC3Framework\ModuleModel {
 	 * return the $maxTagPerCategory's most common product tags in given category
 	 * 
 	 * @author Schnepp David
-	 * @since 2016/09/13
+	 * @since 2016/09/14
 	 * @param int $id_lang the lang used
 	 * @param int $id_category the category to use
 	 * @param int $maxTagPerCategory the maximum of tags to return for this category
