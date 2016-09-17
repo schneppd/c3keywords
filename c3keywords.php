@@ -37,7 +37,7 @@ class C3Keywords extends Module {
 		//setup this module's basic informations
 		$this->name = 'c3keywords';
 		$this->tab = 'front_office_features';
-		$this->version = '1.0.0';
+		$this->version = '1.0.1';
 		$this->author = 'Schnepp David';
 		$this->need_instance = 0;
 
