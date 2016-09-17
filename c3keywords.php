@@ -60,8 +60,8 @@ class C3Keywords extends Module {
 	* @since 2016/09/13
 	*/
 	protected function customizeModuleConstruction() {
-		$moduleInformations = new \NsC3Framework\ModuleInformations($this->name, dirname(__FILE__), _PS_CACHE_DIR_, _DB_PREFIX_);
-		$dbConnection = new \NsC3Framework\DatabaseConnection(Db::getInstance(_PS_USE_SQL_SLAVE_), _DB_PREFIX_);
+		$moduleInformations = new \NsC3KeywordsFramework\ModuleInformations($this->name, dirname(__FILE__), _PS_CACHE_DIR_, _DB_PREFIX_);
+		$dbConnection = new \NsC3KeywordsFramework\DatabaseConnection(Db::getInstance(_PS_USE_SQL_SLAVE_), _DB_PREFIX_);
 		$this->controller = new \NsC3KeywordsModule\KeywordsController($moduleInformations, $dbConnection);
 	}
 	

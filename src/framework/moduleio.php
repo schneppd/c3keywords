@@ -6,7 +6,7 @@
  * @since 2016/09/13
  */
 
-namespace NsC3Framework;
+namespace NsC3KeywordsFramework;
 
 class ModuleIO {
 	

@@ -10,7 +10,7 @@ namespace NsC3KeywordsModule;
 
 include_once(dirname(__FILE__) . '/../framework/modulemodel.php');
 
-class KeywordsModel extends \NsC3Framework\ModuleModel {
+class KeywordsModel extends \NsC3KeywordsFramework\ModuleModel {
 
 	/*
 	 * the constructor

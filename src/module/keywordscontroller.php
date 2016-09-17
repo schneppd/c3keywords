@@ -14,7 +14,7 @@ include_once(dirname(__FILE__) . '/keywordsmodel.php');
 include_once(dirname(__FILE__) . '/../framework/modulecontroller.php');
 include_once(dirname(__FILE__) . '/../framework/moduleio.php');
 
-class KeywordsController extends \NsC3Framework\ModuleController {
+class KeywordsController extends \NsC3KeywordsFramework\ModuleController {
 
 	/*
 	 * the constructor
@@ -40,7 +40,7 @@ class KeywordsController extends \NsC3Framework\ModuleController {
 	public function getCachedTagsListHtml(&$id_category) {
 		$file = 'c3keywords_' . $id_category .'.cache';
 		$path = static::$moduleInformations->getModuleCacheFilePath($file);
-		$rawHtml = \NsC3Framework\ModuleIO::getFileContentToString($path);
+		$rawHtml = \NsC3KeywordsFramework\ModuleIO::getFileContentToString($path);
 		$html = trim($rawHtml);
 		return $html;
 	}
@@ -77,8 +77,8 @@ class KeywordsController extends \NsC3Framework\ModuleController {
 	public function regenerateTagListCache(&$cacheId, &$html) {
 		$cacheFileName = $cacheId . '.cache';
 		$cacheFile = static::$moduleInformations->getModuleCacheFilePath($cacheFileName);
-		\NsC3Framework\ModuleIO::safeDeleteFile($cacheFile);
-		\NsC3Framework\ModuleIO::writeStringToFile($html, $cacheFile);
+		\NsC3KeywordsFramework\ModuleIO::safeDeleteFile($cacheFile);
+		\NsC3KeywordsFramework\ModuleIO::writeStringToFile($html, $cacheFile);
 	}
 	
 	/*
@@ -92,7 +92,7 @@ class KeywordsController extends \NsC3Framework\ModuleController {
 	public function canDisplayTagList(&$id_category) {
 		$file = 'c3keywords_' . $id_category. '.cache';
 		$filePath = static::$moduleInformations->getModuleCacheFilePath($file);
-		return \NsC3Framework\ModuleIO::existFile($filePath);
+		return \NsC3KeywordsFramework\ModuleIO::existFile($filePath);
 	}
 
 }
